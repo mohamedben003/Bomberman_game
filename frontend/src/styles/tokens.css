@@ -1,0 +1,42 @@
+/*
+ * Design tokens — single source for colours, spacing, typography.
+ * Player palette p0..p3 matches the slot order sent by the server.
+ */
+:root {
+  color-scheme: dark;
+
+  /* player colours, indexed by slot 0..3 */
+  --p0: #4cc9f0;
+  --p1: #f72585;
+  --p2: #ffd166;
+  --p3: #7bd389;
+
+  --bg: #0b0e14;
+  --bg-elevated: #121724;
+  --fg: #e8ecf4;
+  --fg-muted: #9aa4b8;
+  --panel: #161c2b;
+  --panel-border: #232c40;
+  --accent: #ff7a1a;
+  --accent-fg: #1a0f05;
+  --danger: #ff5c5c;
+  --success: #57d98a;
+
+  --tile: min(4.6vh, 4.2vw, 44px);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --font-body: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Cascadia Mono', 'Consolas', ui-monospace, monospace;
+
+  --shadow-panel: 0 10px 30px rgb(0 0 0 / 35%);
+}

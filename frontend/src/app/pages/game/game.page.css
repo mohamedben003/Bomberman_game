@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 100dvh;
+  padding: var(--space-3);
+}
+
+.game__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 32px;
+}
+
+.game__room {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+
+.game__offline {
+  padding: var(--space-3);
+  border-color: var(--danger);
+}
+
+.game__body {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  flex: 1;
+  min-height: 0;
+}
+
+.game__board {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.game__spectate {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-3);
+  transform: translateX(-50%);
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgb(0 0 0 / 72%);
+  color: var(--accent);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.game__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 260px;
+  max-width: 340px;
+  min-height: 0;
+  max-height: calc(100dvh - 80px);
+}
+
+.game__side app-chat {
+  flex: 1;
+  min-height: 140px;
+}
+
+.game__result {
+  padding: var(--space-3);
+}
+
+.game__hint {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .game__body {
+    flex-direction: column;
+  }
+
+  .game__side {
+    max-width: none;
+    max-height: none;
+  }
+}

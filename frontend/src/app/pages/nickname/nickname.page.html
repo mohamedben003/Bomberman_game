@@ -1,0 +1,40 @@
+<main class="nickname">
+  <section class="panel card">
+    <header>
+      <h1>Bomberman</h1>
+      <p>Pick a nickname to join a room.</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (notice(); as message) {
+        <p class="error-text server-error" role="alert">{{ message }}</p>
+      }
+
+      <div class="field">
+        <label for="nickname">Nickname</label>
+        <input
+          id="nickname"
+          type="text"
+          formControlName="nickname"
+          autocomplete="off"
+          spellcheck="false"
+          [attr.aria-invalid]="fieldError() ? 'true' : null"
+          [attr.aria-describedby]="fieldError() ? 'nickname-error' : 'nickname-hint'"
+        />
+        @if (fieldError(); as message) {
+          <p class="error-text" id="nickname-error" role="alert">{{ message }}</p>
+        } @else {
+          <p class="hint" id="nickname-hint">1–{{ maxLength }} characters. No account needed.</p>
+        }
+      </div>
+
+      @if (serverError(); as message) {
+        <p class="error-text server-error" role="alert">{{ message }}</p>
+      }
+
+      <button class="btn" type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Joining…' : 'Join a room' }}
+      </button>
+    </form>
+  </section>
+</main>

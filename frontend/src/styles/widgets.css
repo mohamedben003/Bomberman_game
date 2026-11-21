@@ -1,0 +1,321 @@
+/* Panels shared by the waiting room and the game page. */
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--fg-muted);
+  vertical-align: middle;
+}
+
+.dot.p0 {
+  background: var(--p0);
+}
+
+.dot.p1 {
+  background: var(--p1);
+}
+
+.dot.p2 {
+  background: var(--p2);
+}
+
+.dot.p3 {
+  background: var(--p3);
+}
+
+/* Player list */
+.player-list {  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.player-list__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.player-list__row--me {
+  background: rgb(255 255 255 / 6%);
+}
+
+.player-list__row--away {
+  opacity: 0.5;
+}
+
+.player-list__name {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.player-list__state {
+  color: var(--fg-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.player-list__empty {
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+}
+
+/* Countdown */
+.countdown {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.countdown__label {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.countdown__value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown__unit {
+  font-size: 1rem;
+  margin-left: 2px;
+  color: var(--fg-muted);
+}
+
+.countdown--urgent .countdown__value {
+  color: var(--accent);
+}
+
+.countdown__bar {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.countdown__bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.countdown__hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
+/* Connection banner */
+.conn-banner {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--panel-border);
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+}
+
+.conn-banner--error {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* HUD */
+.hud {
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.hud__title {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+}
+
+.hud__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+}
+
+.hud__row--me .hud__name {
+  font-weight: 700;
+}
+
+.hud__name {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.hud__lives {
+  color: var(--fg-muted);
+  font-size: 0.8rem;
+}
+
+.hud__stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.hud__stat dt {
+  font-size: 0.7rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud__stat dd {
+  margin: 0;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud__spectating {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+/* Debug overlay */
+.perf {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 72%);
+  color: #d7ffe0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  pointer-events: none;
+}
+
+.perf__fps {
+  color: #8dffb0;
+  font-weight: 700;
+}
+/* Loading / empty / error states (results, history, match details) */
+.state {
+  padding: var(--space-5);
+}
+
+.state h2 {
+  margin-bottom: var(--space-2);
+}
+
+.state--error {
+  border-color: var(--danger);
+}
+
+.state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Data tables */
+.data-table,
+.match-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td,
+.match-table th,
+.match-table td {
+  padding: var(--space-2);
+  text-align: left;
+  border-bottom: 1px solid var(--panel-border);
+  vertical-align: middle;
+}
+
+.data-table th,
+.match-table th {
+  color: var(--fg-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.data-table tbody tr:last-child td,
+.match-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.match-table tbody tr {
+  cursor: pointer;
+}
+
+.match-table tbody tr:hover,
+.match-table tbody tr:focus-visible {
+  background: rgb(255 255 255 / 5%);
+}
+
+.match-table__date,
+.match-table__duration {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.match-table__players {
+  overflow-wrap: anywhere;
+}
+
+.match-table__go {
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success) 18%, transparent);
+  color: var(--success);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.tag--draw {
+  background: color-mix(in srgb, var(--fg-muted) 18%, transparent);
+  color: var(--fg-muted);
+}

@@ -1,0 +1,65 @@
+<main class="game">
+  <header class="game__top">
+    <p class="game__room">Room {{ roomId() || '-' }}</p>
+    <app-connection-banner [status]="status()" [message]="closeReason()" />
+    @if (disconnected()) {
+      <button class="btn btn--ghost" type="button" (click)="backToNickname()">
+        Back to nickname
+      </button>
+    }
+  </header>
+
+  @if (disconnected()) {
+    <section class="panel game__offline" role="alert">
+      <h2>Connection lost</h2>
+      <p>
+        The match stopped for you. There is no reconnect: join a new room with a nickname.
+      </p>
+      <button class="btn" type="button" (click)="backToNickname()">Return to nickname</button>
+    </section>
+  }
+
+  <div class="game__body">
+    <section class="game__board">
+      <app-board [tiles]="tiles()" [players]="players()" [youId]="meId()" />
+      @if (debug()) {
+        <app-perf-overlay [reading]="fps.reading()" />
+      }
+      @if (spectating()) {
+        <p class="game__spectate" role="status">
+          You are out - spectating. Chat stays available.
+        </p>
+      }
+    </section>
+
+    <aside class="game__side">
+      @if (ended(); as result) {
+        <section class="panel game__result" role="status">
+          <h2>Match finished</h2>
+          <p>
+            @if (result.outcome === 'DRAW') {
+              Draw.
+            } @else {
+              {{ result.winner?.nickname }} wins.
+            }
+          </p>
+          <a class="btn" [routerLink]="['/results', result.matchId]">View results</a>
+        </section>
+      }
+
+      <app-player-list [players]="matchPlayers()" [meId]="meId()" />
+      <app-hud [stats]="stats()" [youId]="meId()" />
+      <app-chat
+        #chat
+        [messages]="chatMessages()"
+        [disabled]="disconnected()"
+        (send)="sendChat($event)"
+        (focusChange)="onChatFocus($event)"
+      />
+    </aside>
+  </div>
+
+  <footer class="game__hint">
+    Arrows / WASD move - Space places a bomb - Enter opens chat - Escape leaves chat
+  </footer>
+</main>

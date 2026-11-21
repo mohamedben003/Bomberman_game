@@ -1,0 +1,86 @@
+<main class="details">
+  <header class="details__top">
+    <div>
+      <h1>Match details</h1>
+      <p class="details__id">{{ matchId() }}</p>
+    </div>
+    <nav>
+      <a routerLink="/history">History</a>
+      <a routerLink="/nickname">Home</a>
+    </nav>
+  </header>
+
+  @if (loading()) {
+    <section class="panel state" role="status">
+      <p>Loading match details...</p>
+    </section>
+  } @else if (notFound()) {
+    <section class="panel state state--error" role="alert">
+      <h2>Match not found</h2>
+      <p>No completed match has this id.</p>
+      <div class="state__actions">
+        <a class="btn" routerLink="/history">Open history</a>
+        <a class="btn btn--ghost" routerLink="/nickname">New game</a>
+      </div>
+    </section>
+  } @else if (error(); as message) {
+    <section class="panel state state--error" role="alert">
+      <h2>Could not load the match</h2>
+      <p>{{ message }}</p>
+      <div class="state__actions">
+        <button class="btn" type="button" (click)="load()">Try again</button>
+        <a class="btn btn--ghost" routerLink="/history">History</a>
+      </div>
+    </section>
+  } @else if (details(); as match) {
+    <section class="panel details__hero">
+      <p class="details__outcome">
+        @if (match.outcome === 'DRAW') {
+          Draw
+        } @else {
+          {{ match.winner?.nickname }} wins
+        }
+      </p>
+      <dl class="details__meta">
+        <div><dt>Duration</dt><dd>{{ duration(match.durationSeconds) }}</dd></div>
+        <div><dt>Players</dt><dd>{{ match.participants.length }}</dd></div>
+        <div><dt>Started</dt><dd>{{ date(match.startedAt) }}</dd></div>
+        <div><dt>Ended</dt><dd>{{ date(match.endedAt) }}</dd></div>
+      </dl>
+    </section>
+
+    <section class="panel details__table">
+      <h2>Participants</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th scope="col">Player</th>
+            <th scope="col">Slot</th>
+            <th scope="col">Corner</th>
+            <th scope="col">Lives left</th>
+            <th scope="col">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (player of match.participants; track player.playerId) {
+            <tr>
+              <td>
+                <span class="dot p{{ player.slot }}"></span>
+                {{ player.nickname }}
+              </td>
+              <td>{{ player.slot }}</td>
+              <td>{{ corner(player.corner) }}</td>
+              <td>{{ player.remainingLives }}</td>
+              <td>{{ resultLabel(player.result) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+    <div class="details__actions">
+      <button class="btn" type="button" (click)="playAgain()">Play again</button>
+      <a class="btn btn--ghost" routerLink="/history">Back to history</a>
+    </div>
+  }
+</main>

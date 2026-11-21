@@ -1,0 +1,39 @@
+<main class="history">
+  <header class="history__top">
+    <div>
+      <h1>Match history</h1>
+      <p class="history__sub">The latest 20 completed matches, newest first.</p>
+    </div>
+    <nav>
+      <a routerLink="/nickname">New game</a>
+    </nav>
+  </header>
+
+  @if (loading()) {
+    <section class="panel state" role="status">
+      <p>Loading match history...</p>
+    </section>
+  } @else if (error(); as message) {
+    <section class="panel state state--error" role="alert">
+      <h2>Could not load the history</h2>
+      <p>{{ message }}</p>
+      <div class="state__actions">
+        <button class="btn" type="button" (click)="load()">Try again</button>
+        <a class="btn btn--ghost" routerLink="/nickname">New game</a>
+      </div>
+    </section>
+  } @else if (matches().length === 0) {
+    <section class="panel state">
+      <h2>No completed matches yet</h2>
+      <p>Finish a match and it will appear here, even after the backend restarts.</p>
+      <a class="btn" routerLink="/nickname">Start a game</a>
+    </section>
+  } @else {
+    <section class="panel history__table">
+      <app-match-table [matches]="matches()" (select)="open($event)" />
+    </section>
+    <button class="btn btn--ghost history__refresh" type="button" (click)="load()">
+      Refresh
+    </button>
+  }
+</main>

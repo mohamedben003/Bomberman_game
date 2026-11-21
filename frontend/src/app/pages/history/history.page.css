@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.history__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.history__top h1 {
+  margin: 0;
+}
+
+.history__sub {
+  margin: var(--space-1) 0 0;
+}
+
+.history__table {
+  padding: var(--space-3);
+  overflow-x: auto;
+}
+
+.history__refresh {
+  align-self: flex-start;
+}

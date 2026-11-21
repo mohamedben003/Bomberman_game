@@ -1,0 +1,38 @@
+.nickname {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--space-5);
+}
+
+.card {
+  width: min(460px, 100%);
+  padding: var(--space-6);
+}
+
+header p {
+  margin-bottom: var(--space-5);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+.server-error {
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.btn {
+  width: 100%;
+}

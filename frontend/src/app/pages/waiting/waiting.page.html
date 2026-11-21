@@ -1,0 +1,61 @@
+<main class="waiting">
+  <app-connection-banner [status]="status()" [message]="closeReason()" />
+
+  <header class="panel waiting__head">
+    <div class="waiting__id">
+      <p class="waiting__label">Room</p>
+      <p class="waiting__room">{{ roomId() || '-' }}</p>
+    </div>
+    <p class="waiting__count" aria-live="polite">{{ count() }} / {{ maxPlayers() }}</p>
+    <button class="btn btn--ghost" type="button" (click)="copyRoomId()" [disabled]="!roomId()">
+      {{ copied() ? 'Copied' : 'Copy room id' }}
+    </button>
+  </header>
+
+  @if (error(); as failure) {
+    <section class="panel waiting__error" role="alert">
+      <h2>{{ failure.fatal ? 'Cannot join this room' : 'The room refused the join' }}</h2>
+      <p>{{ failure.message }}</p>
+      <p class="waiting__code">{{ failure.code }}</p>
+      <div class="waiting__actions">
+        @if (!failure.fatal) {
+          <button class="btn" type="button" (click)="retry()">Try again</button>
+        }
+        <button class="btn btn--ghost" type="button" (click)="leave()">Back to nickname</button>
+      </div>
+    </section>
+  } @else if (disconnected()) {
+    <section class="panel waiting__error" role="alert">
+      <h2>Disconnected</h2>
+      <p>The connection to the game server closed. No reconnect is attempted.</p>
+      <button class="btn" type="button" (click)="leave()">Back to nickname</button>
+    </section>
+  } @else if (room(); as current) {
+    <section class="panel waiting__players">
+      <h2>Players</h2>
+      <app-player-list [players]="current.players" [meId]="meId()" />
+    </section>
+
+    <app-countdown [timer]="current.timer" [phase]="current.phase" />
+
+    <app-chat class="waiting__chat" [messages]="chat()" (send)="sendChat($event)" />
+  } @else {
+    <section class="panel waiting__loading" role="status">
+      <p>Joining the room...</p>
+    </section>
+  }
+
+  <section class="panel waiting__controls">
+    <h2>Controls</h2>
+    <dl>
+      <div><dt>Move</dt><dd>Arrow keys or WASD (physical keys; ZQSD works on AZERTY)</dd></div>
+      <div><dt>Place bomb</dt><dd>Space</dd></div>
+      <div><dt>Focus chat</dt><dd>Enter</dd></div>
+      <div><dt>Leave chat input</dt><dd>Escape</dd></div>
+    </dl>
+  </section>
+
+  <footer class="waiting__foot">
+    <button class="btn btn--ghost" type="button" (click)="leave()">Leave room</button>
+  </footer>
+</main>

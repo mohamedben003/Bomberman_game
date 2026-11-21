@@ -1,0 +1,86 @@
+/* Room chat: bounded list, text-only rendering, auto-scrolled to the newest line. */
+
+app-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 0;
+  padding: var(--space-3);
+  flex: 1;
+}
+
+.chat__title {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.chat__list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+}
+
+.chat__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.chat__from {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chat__text {
+  color: var(--fg);
+  white-space: pre-wrap;
+}
+
+.chat__line--system .chat__text {
+  color: var(--fg-muted);
+  font-style: italic;
+}
+
+.chat__time {
+  margin-left: auto;
+  color: var(--fg-muted);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.chat__empty {
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+}
+
+.chat__form {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.chat__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+}
