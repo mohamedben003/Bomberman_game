@@ -26,7 +26,7 @@ npm start
 ```
 
 Without the backend, open the nickname page and choose **Try offline demo**. The existing pages then
-show simulated players, a short countdown, movement and bomb visuals, canned chat, and local sample
+show simulated players, a short countdown, blocking crate obstacles, movement and bomb visuals, canned chat, and local sample
 results/history. The persistent banner marks the preview and has **Exit demo** to return to the
 normal server mode. A refresh during a match returns to nickname; sample results are session-only.
 Demo mode does not call `/api` or open `/ws`.

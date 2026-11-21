@@ -6,6 +6,8 @@ import { DemoService } from './demo.service';
 import { GameSocketService } from './game-socket.service';
 import { GameViewService } from './game-view.service';
 import { HistoryService } from './history.service';
+import { COLS } from './models/game.constants';
+import { TileCode } from './models/match.models';
 import { RoomStore } from './room-store';
 import { SessionService } from './session.service';
 
@@ -40,6 +42,18 @@ describe('offline demo isolation and lifecycle', () => {
     vi.useRealTimers();
     vi.unstubAllGlobals();
   });
+
+  function startPreview(): void {
+    demo.enable();
+    sessions.create('Ada').subscribe();
+    socket.connect(sessions.sessionId()!);
+    vi.advanceTimersByTime(3900);
+  }
+
+  function playerPosition(): { x: number; y: number } {
+    view.snap();
+    return view.sample(performance.now()).players[0];
+  }
 
   it('uses normal HTTP and WebSocket paths until the demo is explicitly selected', () => {
     let sockets = 0;
@@ -135,5 +149,38 @@ describe('offline demo isolation and lifecycle', () => {
     const countAfterRestartClose = messages.mock.calls.length;
     vi.advanceTimersByTime(5000);
     expect(messages).toHaveBeenCalledTimes(countAfterRestartClose);
+  });
+
+  it('places visible boxes while leaving both spawn exits open and rebuilds the layout', () => {
+    startPreview();
+    const first = [...view.tiles()];
+    expect(first.filter((tile) => tile === TileCode.Block)).toHaveLength(26);
+    for (const [col, row] of [[1, 1], [2, 1], [1, 2], [13, 11], [12, 11], [13, 10]]) {
+      expect(first[row * COLS + col]).toBe(TileCode.Floor);
+    }
+    expect(first[1 * COLS + 4]).toBe(TileCode.Block);
+
+    socket.close();
+    rooms.reset();
+    view.reset();
+    sessions.clear();
+    startPreview();
+    expect(view.tiles()).toEqual(first);
+  });
+
+  it('stops the player footprint at a box but permits a route around it', () => {
+    startPreview();
+    socket.send({ type: 'MOVE', data: { direction: 'RIGHT' } });
+    vi.advanceTimersByTime(2000);
+    const blocked = playerPosition();
+    expect(blocked.x).toBeGreaterThan(3);
+    expect(blocked.x).toBeLessThan(3.7); // box begins at column 4
+
+    socket.send({ type: 'MOVE', data: { direction: 'DOWN' } });
+    vi.advanceTimersByTime(400);
+    expect(playerPosition().y).toBeGreaterThan(2.3);
+    socket.send({ type: 'MOVE', data: { direction: 'RIGHT' } });
+    vi.advanceTimersByTime(330);
+    expect(playerPosition().x).toBeGreaterThan(4.1); // the second row is open
   });
 });

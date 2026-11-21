@@ -10,6 +10,15 @@ import type { ClientMessage, ServerMessage } from './models/ws-messages';
 
 const MODE_KEY = 'bomberman-offline-demo';
 const REPLY = 'Sample reply: nice move!';
+const PLAYER_HALF_WIDTH = 0.48;
+/** Fixed preview crates; the two corner spawns and their adjacent exits stay open. */
+const BOXES: readonly (readonly [number, number])[] = [
+  [4, 1], [1, 4], [11, 11], [13, 8],
+  [3, 3], [5, 3], [7, 3], [9, 3], [11, 3],
+  [2, 5], [4, 5], [6, 5], [8, 5], [10, 5], [12, 5],
+  [3, 7], [5, 7], [7, 7], [9, 7], [11, 7],
+  [2, 9], [4, 9], [6, 9], [8, 9], [10, 9], [12, 9],
+];
 
 /** A small local preview that emits the same messages as a match, only when selected. */
 @Injectable({ providedIn: 'root' })
@@ -158,6 +167,7 @@ export class DemoService {
       return col === 0 || row === 0 || col === COLS - 1 || row === ROWS - 1
         ? TileCode.Wall : TileCode.Floor;
     });
+    for (const [col, row] of BOXES) this.tiles[row * COLS + col] = TileCode.Block;
     this.match = {
       matchId: 'demo-match-' + this.run,
       you: { playerId: 'demo-you', slot: 0 },
@@ -176,12 +186,28 @@ export class DemoService {
 
   private advance(): void {
     const step = 0.09;
-    if (this.direction === 'UP') this.y = Math.max(1.5, this.y - step);
-    if (this.direction === 'DOWN') this.y = Math.min(ROWS - 1.5, this.y + step);
-    if (this.direction === 'LEFT') this.x = Math.max(1.5, this.x - step);
-    if (this.direction === 'RIGHT') this.x = Math.min(COLS - 1.5, this.x + step);
+    let nextX = this.x;
+    let nextY = this.y;
+    if (this.direction === 'UP') nextY -= step;
+    if (this.direction === 'DOWN') nextY += step;
+    if (this.direction === 'LEFT') nextX -= step;
+    if (this.direction === 'RIGHT') nextX += step;
+    if (this.canOccupy(nextX, nextY)) {
+      this.x = nextX;
+      this.y = nextY;
+    }
     this.tick++;
     this.snapshot();
+  }
+
+  private canOccupy(x: number, y: number): boolean {
+    for (let row = Math.floor(y - PLAYER_HALF_WIDTH); row <= Math.floor(y + PLAYER_HALF_WIDTH); row++) {
+      for (let col = Math.floor(x - PLAYER_HALF_WIDTH); col <= Math.floor(x + PLAYER_HALF_WIDTH); col++) {
+        const tile = this.tiles[row * COLS + col];
+        if (tile === undefined || tile === TileCode.Wall || tile === TileCode.Block) return false;
+      }
+    }
+    return true;
   }
 
   private snapshot(): void {

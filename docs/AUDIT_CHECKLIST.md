@@ -14,11 +14,12 @@ supplement real-browser evidence; they do not replace it.
 
 | Run | Date | Environment | Players | What was checked | Result / link |
 |---|---|---|---|---|---|
-| E1 | 2026-11-21 | Windows 11 build 26300, Node 24.11.0, npm 11.20.0, Angular CLI 21.2.29, Vitest 4.1.12, headless jsdom | 0 (tests) | `npm test -- --watch=false` in `frontend/` | 15 files / 68 tests passed, exit 0; see §9 |
+| E1 | 2026-11-21 | Windows 11 build 26300, Node 24.11.0, npm 11.20.0, Angular CLI 21.2.29, Vitest 4.1.12, headless jsdom | 0 (tests) | `npm test -- --watch=false` in `frontend/` | 15 files / 70 tests passed, exit 0; see §9 |
 | E2 | 2026-11-21 | same as E1 | 0 (build) | `npm run build` in `frontend/` | success, exit 0, output `frontend/dist/frontend/browser`; see §9 |
 | E3 | 2026-11-20 | Chrome 157, 1280×720, DPR 1, `ng serve` on port 4210, **no backend** | 1 synthetic | `/`, `/game` guard, blank nickname validation, `/history` error, session error | Pages rendered; guard redirected to `/nickname?reason=...`; blank nickname showed "Enter a nickname."; `/history` showed "Could not load the history" with retry; POST `/api/sessions` showed a visible error. Synthetic, not multiplayer. |
 | E4 | 2026-11-20 | source tree, `frontend/` | 0 | Runtime search for `canvas`, `getContext`, `WebGL`, `innerHTML`; dependency inventory | No runtime matches; only explanatory comments. Angular/RxJS only. See S1–S3. |
 | E5 | 2026-11-21 | built-in Browser, local dev server on port 4211, **no backend** | 1 simulated + 1 sample player | Explicit offline demo: nickname → waiting/countdown → game movement, bomb and chat → results/history/details → play again → exit | Preview completed. Sprite transform changed from `translate(100%, 100%)` to `translate(190%, 100%)` after held Right; bomb tile appeared; canned reply, result and history/detail appeared. Exit returned to normal nickname. This is simulated UI evidence, not multiplayer/persistence evidence. |
+| E6 | 2026-11-21 | built-in Browser, same local preview | 1 simulated + 1 sample player | Fixed crate layout and demo collision | 26 visible box tiles; holding Right stopped at `translate(298%, 100%)` beside a crate and stayed there; moving Down then Right reached `translate(379%, 199%)` through the gap. Both spawn exits and restart layout are covered by tests. Simulated preview only. |
 
 Environment template for real runs: browser + version, OS, viewport, display refresh rate, backend
 commit, frontend commit, PostgreSQL version, Docker/Testcontainers used or not. For E3 the backend
@@ -66,7 +67,7 @@ commit is absent because `backend/` is not in this checkout.
 | P5 | History survives restart | Finish a match, stop/restart Spring Boot, load `/history` and the result URL; data is still correct. | both | Pending |
 | P6 | Live state not persisted | Rooms, chat, bombs, positions and countdowns are absent from the database; restarting does not restore a live match. | mbenboua | Pending |
 | P7 | Automated tests | `./mvnw test` covers collisions, bomb damage, power-ups, matchmaking timers, winner/draw and saving a complete result. | mbenboua | Pending |
-| P8 | Frontend tests | `npm test -- --watch=false` covers session/socket/store/guards/interpolation/input/navigation and isolated offline demo; `npm run build` succeeds. | Es-sadkia | **Pass 2026-11-21:** 15 files / 68 tests passed (exit 0); production build succeeded (exit 0). Exact output in §9. |
+| P8 | Frontend tests | `npm test -- --watch=false` covers session/socket/store/guards/interpolation/input/navigation and isolated offline demo; `npm run build` succeeds. | Es-sadkia | **Pass 2026-11-21:** 15 files / 70 tests passed (exit 0); production build succeeded (exit 0). Exact output in §9. |
 
 ## 4. Performance checks
 
@@ -139,15 +140,15 @@ Vitest 4.1.12, jsdom. Commands run in `C:\Users\leno\Desktop\M2I\S3\Full_Stake\B
 
 | Command | Output | Exit |
 |---|---|---|
-| `npm test -- --watch=false` | `Test Files 15 passed (15)`, `Tests 68 passed (68)`, duration 19.61 s | 0 |
+| `npm test -- --watch=false` | `Test Files 15 passed (15)`, `Tests 70 passed (70)`, duration 11.56 s | 0 |
 | `npx tsc --noEmit -p tsconfig.app.json` | No diagnostics | 0 |
 | `npm run build` | `Application bundle generation complete`, output `frontend/dist/frontend/browser` | 0 |
 
-Automated coverage by file (68 tests): app shell (2), single-socket lifecycle incl. stale close
+Automated coverage by file (70 tests): app shell (2), single-socket lifecycle incl. stale close
 callbacks and a session change (7), tick/clock interpolation, stale/gap/visibility snaps and reset (11), room store
 transitions/chat/retry/park (8), session + nickname prefill (3), history REST mapping (2), route
 guards (5), nickname page validation/errors (4), waiting page disconnect/real routing (3), game page
-input, disconnect, navigation, loop and match-end behavior (8), offline demo isolation/lifecycle (3), history page
+input, disconnect, navigation, loop and match-end behavior (8), offline demo isolation/lifecycle/box collision (5), history page
 states (4), results page states (3), tile layer (3), players layer (2).
 
 Browser check (Chrome 157, 1280×720, dev server on port 4210, no backend):
