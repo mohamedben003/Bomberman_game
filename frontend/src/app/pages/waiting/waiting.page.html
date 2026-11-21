@@ -36,7 +36,7 @@
       <app-player-list [players]="current.players" [meId]="meId()" />
     </section>
 
-    <app-countdown [timer]="current.timer" [phase]="current.phase" />
+    <app-countdown [timer]="current.timer" [phase]="current.phase" [demo]="demo.enabled()" />
 
     <app-chat class="waiting__chat" [messages]="chat()" (send)="sendChat($event)" />
   } @else {

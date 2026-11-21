@@ -1,1 +1,9 @@
+@if (demo.enabled()) {
+  <aside class="demo-banner" role="status">
+    <strong>Offline demo — simulated players and results</strong>
+    <span>No backend or multiplayer connection.</span>
+    <a routerLink="/history">Sample history</a>
+    <button type="button" (click)="exitDemo()">Exit demo</button>
+  </aside>
+}
 <router-outlet />

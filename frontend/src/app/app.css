@@ -1,0 +1,27 @@
+.demo-banner {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--accent);
+  color: var(--accent-fg);
+  box-shadow: var(--shadow-panel);
+}
+
+.demo-banner a,
+.demo-banner button {
+  color: var(--accent-fg);
+  font: inherit;
+  text-decoration: underline;
+}
+
+.demo-banner button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}

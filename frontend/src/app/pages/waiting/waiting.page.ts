@@ -15,6 +15,7 @@ import { ConnectionBannerComponent } from '../../components/connection-banner/co
 import { CountdownComponent } from '../../components/countdown/countdown.component';
 import { PlayerListComponent } from '../../components/player-list/player-list.component';
 import { GameViewService } from '../../core/game-view.service';
+import { DemoService } from '../../core/demo.service';
 import { RoomStore } from '../../core/room-store';
 import { SessionService } from '../../core/session.service';
 
@@ -41,6 +42,7 @@ export class WaitingPage implements OnInit, OnDestroy {
   private readonly rooms = inject(RoomStore);
   private readonly view = inject(GameViewService);
   private readonly router = inject(Router);
+  protected readonly demo = inject(DemoService);
 
   protected readonly room = this.rooms.room;
   protected readonly chat = this.rooms.chat;

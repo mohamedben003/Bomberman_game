@@ -14,10 +14,11 @@ supplement real-browser evidence; they do not replace it.
 
 | Run | Date | Environment | Players | What was checked | Result / link |
 |---|---|---|---|---|---|
-| E1 | 2026-11-21 | Windows 11 build 26300, Node 24.11.0, npm 11.20.0, Angular CLI 21.2.29, Vitest 4.1.12, headless jsdom | 0 (tests) | `npm test -- --watch=false` in `frontend/` | 14 files / 65 tests passed, exit 0; see §9 |
+| E1 | 2026-11-21 | Windows 11 build 26300, Node 24.11.0, npm 11.20.0, Angular CLI 21.2.29, Vitest 4.1.12, headless jsdom | 0 (tests) | `npm test -- --watch=false` in `frontend/` | 15 files / 68 tests passed, exit 0; see §9 |
 | E2 | 2026-11-21 | same as E1 | 0 (build) | `npm run build` in `frontend/` | success, exit 0, output `frontend/dist/frontend/browser`; see §9 |
 | E3 | 2026-11-20 | Chrome 157, 1280×720, DPR 1, `ng serve` on port 4210, **no backend** | 1 synthetic | `/`, `/game` guard, blank nickname validation, `/history` error, session error | Pages rendered; guard redirected to `/nickname?reason=...`; blank nickname showed "Enter a nickname."; `/history` showed "Could not load the history" with retry; POST `/api/sessions` showed a visible error. Synthetic, not multiplayer. |
 | E4 | 2026-11-20 | source tree, `frontend/` | 0 | Runtime search for `canvas`, `getContext`, `WebGL`, `innerHTML`; dependency inventory | No runtime matches; only explanatory comments. Angular/RxJS only. See S1–S3. |
+| E5 | 2026-11-21 | built-in Browser, local dev server on port 4211, **no backend** | 1 simulated + 1 sample player | Explicit offline demo: nickname → waiting/countdown → game movement, bomb and chat → results/history/details → play again → exit | Preview completed. Sprite transform changed from `translate(100%, 100%)` to `translate(190%, 100%)` after held Right; bomb tile appeared; canned reply, result and history/detail appeared. Exit returned to normal nickname. This is simulated UI evidence, not multiplayer/persistence evidence. |
 
 Environment template for real runs: browser + version, OS, viewport, display refresh rate, backend
 commit, frontend commit, PostgreSQL version, Docker/Testcontainers used or not. For E3 the backend
@@ -50,7 +51,7 @@ commit is absent because `backend/` is not in this checkout.
 | F21 | Room isolation | Run two matches simultaneously (four+ players or two sets of browsers); no chat, state or result crosses rooms. A client cannot act for another player. | mbenboua + Es-sadkia | Pending (backend + real run). |
 | F22 | Invalid/forged messages | Send forged positions/lives/player ids, unknown types, malformed JSON, an oversized frame and binary frames: server rejects/ignores without changing valid state or crashing. | mbenboua | Pending (backend). Frontend sends intentions only. |
 | F23 | Loading/error UX | Stop the backend or drop the socket: visible connection error, gameplay stops, protected routes return to nickname with an explanation. | Es-sadkia | **Frontend pass (synthetic):** browser run without backend showed visible session/history errors; `/game` redirected with a reason; live socket drop still needs a backend. |
-| F24 | Results page | After `MATCH_END`, the results page shows winner/draw, participants, lives, results and duration from PostgreSQL. | Es-sadkia + mbenboua | **Frontend pass (fixtures):** `ResultsPage` always reloads `GET /api/matches/{id}`; loading/404/error states covered by tests. Live persistence pending. |
+| F24 | Results page | After `MATCH_END`, the results page shows winner/draw, participants, lives, results and duration from PostgreSQL. | Es-sadkia + mbenboua | **Frontend pass (fixtures):** live mode reloads `GET /api/matches/{id}`; the explicit offline demo reads labelled local sample results. Loading/404/error states are covered by tests. Live persistence pending. |
 | F25 | History page | `/history` lists the latest 20 completed matches newest first; selecting one shows details; empty state and loading/error states are visible. | Es-sadkia | **Frontend pass (fixtures + browser):** list/detail pages, empty/error/loading states; browser showed the error state without a backend. Live data pending. |
 | F26 | Navigation cleanup | Repeat waiting → game → results → new session several times; no duplicate sockets, duplicate messages, stale timers, keyboard listeners or rAF loops. | Es-sadkia | **Frontend reviewed/tested:** real router tests confirm waiting → history keeps its destination and closes the room, while `MATCH_START` → game keeps the socket and first snapshot; loop/listener cleanup and park-on-end are unit-tested. Repeated live matches still pending. |
 
@@ -65,7 +66,7 @@ commit is absent because `backend/` is not in this checkout.
 | P5 | History survives restart | Finish a match, stop/restart Spring Boot, load `/history` and the result URL; data is still correct. | both | Pending |
 | P6 | Live state not persisted | Rooms, chat, bombs, positions and countdowns are absent from the database; restarting does not restore a live match. | mbenboua | Pending |
 | P7 | Automated tests | `./mvnw test` covers collisions, bomb damage, power-ups, matchmaking timers, winner/draw and saving a complete result. | mbenboua | Pending |
-| P8 | Frontend tests | `npm test -- --watch=false` covers session/socket/store/guards/interpolation/input/navigation; `npm run build` succeeds. | Es-sadkia | **Pass 2026-11-21:** 14 files / 65 tests passed (exit 0); production build succeeded (exit 0). Exact output in §9. |
+| P8 | Frontend tests | `npm test -- --watch=false` covers session/socket/store/guards/interpolation/input/navigation and isolated offline demo; `npm run build` succeeds. | Es-sadkia | **Pass 2026-11-21:** 15 files / 68 tests passed (exit 0); production build succeeded (exit 0). Exact output in §9. |
 
 ## 4. Performance checks
 
@@ -138,15 +139,15 @@ Vitest 4.1.12, jsdom. Commands run in `C:\Users\leno\Desktop\M2I\S3\Full_Stake\B
 
 | Command | Output | Exit |
 |---|---|---|
-| `npm test -- --watch=false` | `Test Files 14 passed (14)`, `Tests 65 passed (65)`, duration 17.24 s | 0 |
+| `npm test -- --watch=false` | `Test Files 15 passed (15)`, `Tests 68 passed (68)`, duration 19.61 s | 0 |
 | `npx tsc --noEmit -p tsconfig.app.json` | No diagnostics | 0 |
 | `npm run build` | `Application bundle generation complete`, output `frontend/dist/frontend/browser` | 0 |
 
-Automated coverage by file (65 tests): app shell (2), single-socket lifecycle incl. stale close
+Automated coverage by file (68 tests): app shell (2), single-socket lifecycle incl. stale close
 callbacks and a session change (7), tick/clock interpolation, stale/gap/visibility snaps and reset (11), room store
 transitions/chat/retry/park (8), session + nickname prefill (3), history REST mapping (2), route
 guards (5), nickname page validation/errors (4), waiting page disconnect/real routing (3), game page
-input, disconnect, navigation, loop and match-end behavior (8), history page
+input, disconnect, navigation, loop and match-end behavior (8), offline demo isolation/lifecycle (3), history page
 states (4), results page states (3), tile layer (3), players layer (2).
 
 Browser check (Chrome 157, 1280×720, dev server on port 4210, no backend):

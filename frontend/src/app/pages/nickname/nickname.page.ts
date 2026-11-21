@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import { NICKNAME_MAX } from '../../core/models/game.constants';
 import type { ApiError } from '../../core/models/api-error';
 import { GameViewService } from '../../core/game-view.service';
+import { DemoService } from '../../core/demo.service';
 import { RoomStore } from '../../core/room-store';
 import { SessionService } from '../../core/session.service';
 
@@ -43,6 +44,7 @@ export class NicknamePage implements OnInit {
   private readonly view = inject(GameViewService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  protected readonly demo = inject(DemoService);
 
   readonly maxLength = NICKNAME_MAX;
   readonly submitting = signal(false);
@@ -105,6 +107,12 @@ export class NicknamePage implements OnInit {
         },
         error: (error: unknown) => this.serverError.set(this.describe(error)),
       });
+  }
+
+  protected startDemo(): void {
+    if (!this.nickname.value.trim()) this.nickname.setValue('Player 1');
+    this.demo.enable();
+    this.submit();
   }
 
   private describe(error: unknown): string {

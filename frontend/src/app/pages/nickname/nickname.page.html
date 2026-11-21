@@ -2,7 +2,7 @@
   <section class="panel card">
     <header>
       <h1>Bomberman</h1>
-      <p>Pick a nickname to join a room.</p>
+      <p>{{ demo.enabled() ? 'Pick a nickname for the sample room.' : 'Pick a nickname to join a room.' }}</p>
     </header>
 
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
@@ -33,8 +33,14 @@
       }
 
       <button class="btn" type="submit" [disabled]="submitting()">
-        {{ submitting() ? 'Joining…' : 'Join a room' }}
+        {{ submitting() ? 'Joining…' : demo.enabled() ? 'Join demo room' : 'Join a room' }}
       </button>
+      @if (!demo.enabled()) {
+        <button class="btn btn--ghost" type="button" (click)="startDemo()">
+          Try offline demo
+        </button>
+        <p class="hint">Explore sample players, movement, chat and results without a server.</p>
+      }
     </form>
   </section>
 </main>

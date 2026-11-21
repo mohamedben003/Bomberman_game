@@ -61,5 +61,8 @@
 
   <footer class="game__hint">
     Arrows / WASD move - Space places a bomb - Enter opens chat - Escape leaves chat
+    @if (demo.enabled() && !ended()) {
+      <button class="btn" type="button" (click)="finishDemo()">Finish sample match</button>
+    }
   </footer>
 </main>

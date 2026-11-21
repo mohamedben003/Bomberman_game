@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 
+import { DemoService } from './demo.service';
 import type { GuestSession } from './models/session.models';
 
 /**
@@ -14,6 +15,7 @@ import type { GuestSession } from './models/session.models';
 @Injectable({ providedIn: 'root' })
 export class SessionService {
   private readonly http = inject(HttpClient);
+  private readonly demo = inject(DemoService);
   private readonly state = signal<GuestSession | null>(null);
   private readonly lastNicknameState = signal<string | null>(null);
 
@@ -26,8 +28,10 @@ export class SessionService {
 
   create(nickname: string): Observable<GuestSession> {
     const body = { nickname: nickname.trim() };
-    return this.http
-      .post<GuestSession>('/api/sessions', body)
+    const request = this.demo.enabled()
+      ? of(this.demo.createSession(body.nickname))
+      : this.http.post<GuestSession>('/api/sessions', body);
+    return request
       .pipe(
         tap((session) => {
           this.state.set(session);

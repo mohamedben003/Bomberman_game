@@ -12,6 +12,15 @@ matches. The full contract is in [`docs/PROTOCOL.md`](docs/PROTOCOL.md) and the 
 > executed in this checkout. Frontend commands, tests and the production build were run locally — see
 > [Verified evidence](#verified-evidence).
 
+## Explore without a backend
+
+Run `cd frontend && npm start`, open <http://localhost:4200/nickname>, and choose **Try offline demo**.
+The preview uses the existing waiting room, board, chat, results and history pages with simulated
+players and results. The orange banner stays visible throughout; **Exit demo** returns to normal
+server mode. The preview makes no `/api` or `/ws` request. Move with arrows/WASD, place a sample
+bomb with Space, and use **Finish sample match** to open results. Sample history exists only in this
+browser session and is not PostgreSQL evidence. A refresh during a match returns to nickname.
+
 ## Stack
 
 | Layer | Technology |
@@ -181,7 +190,7 @@ Run on 2026-11-20 on Windows, Node 24.11.0, npm 11.20.0, Angular CLI 21.2.29:
 
 | Command | Result |
 |---|---|
-| `cd frontend && npm test -- --watch=false` | 14 test files, 65 tests passed (2026-11-21) |
+| `cd frontend && npm test -- --watch=false` | 15 test files, 68 tests passed (2026-11-21) |
 | `cd frontend && npm run build` | success, output `frontend/dist/frontend/browser` |
 
 Not verified here because `backend/` is absent: real REST sessions, WebSocket multiplayer, persistence

@@ -11,8 +11,9 @@ import { SessionService } from '../../core/session.service';
 /**
  * Results for one finished match.
  *
- * Always fetches `GET /api/matches/{matchId}` (persisted data), never the live
- * `MATCH_END` payload (PROTOCOL.md §5.6, TASKS Phase 4).
+ * In normal mode, fetches `GET /api/matches/{matchId}` (persisted data), never
+ * the live `MATCH_END` payload (PROTOCOL.md §5.6, TASKS Phase 4). The explicit
+ * offline demo supplies labelled local sample results through HistoryService.
  */
 @Component({
   selector: 'app-results-page',

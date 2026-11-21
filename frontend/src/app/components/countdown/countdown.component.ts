@@ -26,7 +26,7 @@ const MS_PER_SECOND = 1000;
     } @else {
       <section class="countdown panel">
         <p class="countdown__label">{{ phaseLabel() }}</p>
-        <p class="countdown__hint">Waiting for the server.</p>
+        <p class="countdown__hint">{{ demo() ? 'Preparing sample players.' : 'Waiting for the server.' }}</p>
       </section>
     }
   `,
@@ -35,6 +35,7 @@ const MS_PER_SECOND = 1000;
 export class CountdownComponent {
   readonly timer = input<RoomTimer | null>(null);
   readonly phase = input<RoomPhase | null>(null);
+  readonly demo = input(false);
 
   /** Server value; re-rendered with every ROOM_STATE. */
   protected readonly secondsLeft = computed(() => this.timer()?.secondsLeft ?? 0);
@@ -50,6 +51,7 @@ export class CountdownComponent {
   }
 
   protected hint(kind: TimerKind): string {
+    if (this.demo()) return 'Preview timer; no server is connected.';
     return kind === 'COUNTDOWN'
       ? '10 s countdown - the server decides when it ends.'
       : '20 s timer - the match starts early if the room fills.';

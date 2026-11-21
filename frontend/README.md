@@ -1,7 +1,8 @@
 # Bomberman - Angular frontend
 
-The Angular client for the Bomberman project. It renders server-confirmed state only: it never
-computes damage, lives, bomb legality, power-ups or results.
+The Angular client for the Bomberman project. In normal mode it renders server-confirmed state only:
+it never computes damage, lives, bomb legality, power-ups or results. The explicit offline demo uses
+local sample events and never claims a real match.
 
 ## Requirements
 
@@ -23,6 +24,12 @@ npm ci
 ```bash
 npm start
 ```
+
+Without the backend, open the nickname page and choose **Try offline demo**. The existing pages then
+show simulated players, a short countdown, movement and bomb visuals, canned chat, and local sample
+results/history. The persistent banner marks the preview and has **Exit demo** to return to the
+normal server mode. A refresh during a match returns to nickname; sample results are session-only.
+Demo mode does not call `/api` or open `/ws`.
 
 This is `ng serve --proxy-config proxy.conf.json`. The dev server listens on
 <http://localhost:4200> and proxies to the backend:
@@ -83,7 +90,7 @@ extra `PLACE_BOMB` messages, and typing in chat never moves the player.
 ## Rendering rules
 
 - HTML and CSS only: no canvas, no WebGL, no game engine or other UI framework.
-- Exactly one WebSocket per tab (`GameSocketService`), opened on `/waiting`, reused by `/game`;
+- In normal mode, exactly one WebSocket per tab (`GameSocketService`), opened on `/waiting`, reused by `/game`;
   callbacks from a closed connection cannot affect a newer one.
 - Exactly one `requestAnimationFrame` loop, owned by `GamePage`.
 - No auto-reconnect: a closed socket stops the loop, releases input, and the page says what happened.
@@ -115,8 +122,8 @@ src/styles/              tokens.css, base.css, board.css, chat.css, widgets.css
 ## Protocol
 
 Message shapes come from `../docs/PROTOCOL.md`. Update `src/app/core/models/*` and this README in the
-same pull request when the protocol changes. `ResultsPage` always reloads persisted data through
-`GET /api/matches/{matchId}`; it never trusts the live `MATCH_END` payload as the source of results.
+same pull request when the protocol changes. In normal mode, `ResultsPage` reloads persisted data
+through `GET /api/matches/{matchId}`; it never trusts the live `MATCH_END` payload as the source of results.
 
 ## Known limitations
 

@@ -18,6 +18,7 @@ import { HudComponent } from '../../components/hud/hud.component';
 import { PerfOverlayComponent } from '../../components/perf-overlay/perf-overlay.component';
 import { PlayerListComponent } from '../../components/player-list/player-list.component';
 import { FpsMeterService } from '../../core/fps-meter.service';
+import { DemoService } from '../../core/demo.service';
 import { GameViewService, type RenderPlayer } from '../../core/game-view.service';
 import type { Direction, RoomPlayer } from '../../core/models/room.models';
 import { RoomStore } from '../../core/room-store';
@@ -67,6 +68,7 @@ export class GamePage implements OnInit, OnDestroy {
   private readonly rooms = inject(RoomStore);
   private readonly sessions = inject(SessionService);
   private readonly router = inject(Router);
+  protected readonly demo = inject(DemoService);
 
   protected readonly fps = inject(FpsMeterService);
   private readonly chat = viewChild<ChatComponent>('chat');
@@ -207,6 +209,10 @@ export class GamePage implements OnInit, OnDestroy {
 
   protected sendChat(text: string): void {
     this.rooms.sendChat(text);
+  }
+
+  protected finishDemo(): void {
+    this.demo.finish();
   }
 
   protected onChatFocus(focused: boolean): void {

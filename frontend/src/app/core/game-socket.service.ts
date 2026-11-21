@@ -1,7 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { parseServerMessage, type ClientMessage, type ServerMessage } from './models/ws-messages';
+import { DemoService } from './demo.service';
 
 /** Connection lifecycle of the one socket a tab is allowed to own. */
 export type SocketStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error';
@@ -18,6 +19,7 @@ export type SocketStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error';
  */
 @Injectable({ providedIn: 'root' })
 export class GameSocketService {
+  private readonly demo = inject(DemoService);
   private socket: WebSocket | null = null;
   private generation = 0;
   /** Session bound to the current socket, so a new session cannot reuse it. */
@@ -33,8 +35,21 @@ export class GameSocketService {
   /** Reason of the last close, shown by the connection banner. */
   readonly closeReason = this.closeReasonState.asReadonly();
 
+  constructor() {
+    this.demo.messages$.subscribe((message) => this.incoming.next(message));
+  }
+
   /** Opens the tab's only socket and sends `JOIN` as soon as it is open. */
   connect(sessionId: string): void {
+    if (this.demo.enabled()) {
+      if (this.connectedSessionId === sessionId && this.statusState() === 'open') return;
+      this.close('new demo session');
+      this.connectedSessionId = sessionId;
+      this.statusState.set('open');
+      this.closeReasonState.set(null);
+      this.demo.join();
+      return;
+    }
     if (this.socket && (this.socket.readyState === WebSocket.CONNECTING || this.socket.readyState === WebSocket.OPEN)) {
       if (this.connectedSessionId === sessionId) {
         return; // one socket per tab, even if a page asks twice
@@ -98,6 +113,10 @@ export class GameSocketService {
 
   /** Sends one typed frame; ignored while the socket is not open. */
   send(message: ClientMessage): void {
+    if (this.demo.enabled()) {
+      if (this.statusState() === 'open') this.demo.receive(message);
+      return;
+    }
     const socket = this.socket;
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       return;
@@ -107,11 +126,16 @@ export class GameSocketService {
 
   /** Re-sends `JOIN` on the current socket (used to retry a non-fatal room error). */
   join(sessionId: string): void {
+    if (this.demo.enabled()) {
+      this.demo.join();
+      return;
+    }
     this.send({ type: 'JOIN', data: { sessionId } });
   }
 
   /** Closes the socket on purpose (leaving the room / match finished). */
   close(reason = 'left the room'): void {
+    this.demo.close();
     const socket = this.socket;
     this.socket = null;
     this.connectedSessionId = null;
