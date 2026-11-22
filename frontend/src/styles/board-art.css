@@ -1,0 +1,279 @@
+/* Each tile remains an HTML element; these drawings are CSS paint only. */
+.board {
+  margin: 8px;
+  border: 0;
+  border-radius: 5px;
+  background: #e0b879;
+  box-shadow:
+    inset 0 0 0 3px #60381e,
+    0 0 0 5px #8b502b,
+    0 0 0 8px #e9ae60,
+    0 7px 0 8px #4c2b1d,
+    0 21px 29px 5px rgb(0 0 0 / 38%);
+}
+
+.cell.t0,
+.cell.t3,
+.cell.t4 {
+  border: 1px solid rgb(106 66 35 / 12%);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 7px, rgb(140 87 41 / 4%) 8px 9px),
+    linear-gradient(145deg, #efcf95, #d8ab6b);
+}
+.cell.t0:nth-child(even) { background-color: #e8c488; }
+
+.cell.t1 {
+  border: 2px solid #60371f;
+  border-radius: 5px;
+  background:
+    radial-gradient(ellipse at 72% 36%, rgb(245 179 92 / 23%), transparent 37%),
+    repeating-linear-gradient(90deg, transparent 0 7px, rgb(57 25 13 / 12%) 8px 9px),
+    linear-gradient(135deg, #996033, #683c25 72%);
+  box-shadow: inset 0 3px 0 #c58a4a, inset 0 -5px 0 #4d2a1d, 0 2px 1px rgb(55 29 15 / 30%);
+}
+.cell.t1::after {
+  content: '';
+  position: absolute;
+  inset: 18%;
+  border: 2px solid rgb(225 169 91 / 23%);
+  border-radius: 4px;
+}
+
+.cell.t2 {
+  z-index: 1;
+  border: 3px solid #65361d;
+  border-radius: 5px;
+  background:
+    linear-gradient(45deg, transparent 45%, #8f4a22 47% 53%, transparent 55%),
+    linear-gradient(-45deg, transparent 45%, #8f4a22 47% 53%, transparent 55%),
+    repeating-linear-gradient(0deg, transparent 0 10px, rgb(102 49 20 / 11%) 11px 12px),
+    linear-gradient(130deg, #f0b55f, #c77931);
+  box-shadow: inset 0 0 0 2px #f8d184, inset 0 -5px 0 rgb(100 43 20 / 25%), 0 3px 2px rgb(58 31 16 / 33%);
+}
+.cell.t2::before {
+  content: '';
+  position: absolute;
+  inset: 18%;
+  border: 2px solid #a85e29;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgb(255 214 134 / 44%);
+}
+.cell.t2::after {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 8%;
+  width: 10%;
+  height: 10%;
+  border-radius: 50%;
+  background: #63351e;
+  box-shadow: calc(var(--tile) * .68) 0 #63351e, 0 calc(var(--tile) * .68) #63351e, calc(var(--tile) * .68) calc(var(--tile) * .68) #63351e;
+}
+
+.cell.t3 { border-radius: 0; animation: none; }
+.cell.t3::before {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border: 2px solid #101421;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, #8c9bab 0 9%, #435066 20%, #181d2d 62%, #101420 85%);
+  box-shadow: inset -4px -5px 0 rgb(0 0 0 / 24%), 0 3px 3px rgb(84 44 26 / 42%);
+  animation: bomb-pulse 900ms ease-in-out infinite;
+}
+.cell.t3::after {
+  content: '';
+  position: absolute;
+  top: 1%;
+  left: 53%;
+  width: 12%;
+  height: 23%;
+  margin: 0;
+  border: 2px solid #633e25;
+  border-radius: 3px;
+  background: #ddbe7a;
+  rotate: 25deg;
+  box-shadow: 4px -4px 0 -2px #ffdd4e;
+}
+
+.cell.t4 {
+  background:
+    radial-gradient(circle, #fffbe2 0 12%, #ffec67 25%, #fa9a30 46%, transparent 67%),
+    linear-gradient(90deg, transparent 35%, #ec5823 46% 54%, transparent 65%),
+    linear-gradient(0deg, transparent 35%, #ec5823 46% 54%, transparent 65%),
+    #d7a767;
+}
+.cell.t4::after {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border-radius: 30% 70% 40% 60%;
+  background: radial-gradient(circle at 50% 65%, #fffacc, #ffd746 48%, #f46a22 76%, transparent 78%);
+  filter: drop-shadow(0 0 3px #e74418);
+}
+
+.cell.t5,
+.cell.t6,
+.cell.t7 {
+  border: 1px solid #ab7438;
+  border-radius: 0;
+  background: linear-gradient(145deg, #efd095, #d3a562);
+}
+.cell.t5::before,
+.cell.t6::before,
+.cell.t7::before {
+  content: '';
+  position: absolute;
+  inset: 12%;
+  border: 2px solid #77421e;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 24%, #fff5bb, #e7a63e 60%, #aa632a);
+  box-shadow: 0 3px 0 #77421e, inset 0 2px 0 #fff3bd;
+}
+.cell.t5::after,
+.cell.t6::after,
+.cell.t7::after {
+  position: relative;
+  z-index: 1;
+  color: #6c321c;
+  font-size: calc(var(--tile) * .52);
+  line-height: 1;
+  text-shadow: 0 1px 0 #ffe1a0;
+}
+.cell.t5::after { content: '●'; font-size: calc(var(--tile) * .44); }
+.cell.t6::after { content: '✦'; color: #b5321e; }
+.cell.t7::after { content: '➤'; color: #27718c; }
+
+/* The wrapper is exactly one tile so existing percentage transforms remain exact. */
+.sprite {
+  --coat: #34b9c9;
+  --coat-dark: #187783;
+  --hat: #32abbc;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  filter: drop-shadow(0 2px 1px rgb(57 28 16 / 50%));
+}
+.sprite::after { content: none; }
+.sprite.p1 { --coat: #f57c91; --coat-dark: #a83557; --hat: #df5a79; background: transparent; }
+.sprite.p2 { --coat: #f6c953; --coat-dark: #a76c21; --hat: #dfa832; background: transparent; }
+.sprite.p3 { --coat: #8cd278; --coat-dark: #4e842e; --hat: #69aa50; background: transparent; }
+.sprite__shadow {
+  position: absolute;
+  left: 15%;
+  bottom: 4%;
+  width: 70%;
+  height: 18%;
+  border-radius: 50%;
+  background: rgb(88 48 21 / 35%);
+}
+.sprite__boots {
+  position: absolute;
+  z-index: 1;
+  left: 23%;
+  bottom: 9%;
+  width: 22%;
+  height: 19%;
+  border: 2px solid #442c25;
+  border-radius: 40% 35% 30% 30%;
+  background: #5e3c31;
+  box-shadow: calc(var(--tile) * .31) 0 #5e3c31;
+}
+.sprite__body {
+  position: absolute;
+  z-index: 2;
+  left: 21%;
+  bottom: 17%;
+  width: 58%;
+  height: 40%;
+  border: 2px solid var(--coat-dark);
+  border-radius: 42% 42% 28% 28%;
+  background: linear-gradient(125deg, #fff2cf 0 8%, var(--coat) 15% 65%, var(--coat-dark));
+  box-shadow: inset 0 3px 0 rgb(255 255 255 / 32%);
+}
+.sprite__body::after {
+  content: '';
+  position: absolute;
+  left: 38%;
+  top: 18%;
+  width: 24%;
+  height: 38%;
+  border-radius: 45%;
+  background: #f7e2b1;
+}
+.sprite__face {
+  position: absolute;
+  z-index: 3;
+  left: 25%;
+  top: 31%;
+  width: 50%;
+  height: 40%;
+  border: 2px solid #68432d;
+  border-radius: 43% 43% 48% 48%;
+  background: linear-gradient(145deg, #ffefd0, #eec593);
+}
+.sprite__face::before {
+  content: '';
+  position: absolute;
+  top: 32%;
+  left: 24%;
+  width: 12%;
+  height: 15%;
+  border-radius: 50%;
+  background: #30231e;
+  box-shadow: calc(var(--tile) * .17) 0 #30231e;
+}
+.sprite__face::after {
+  content: '';
+  position: absolute;
+  top: 59%;
+  left: 38%;
+  width: 24%;
+  height: 13%;
+  border-bottom: 2px solid #a45e45;
+  border-radius: 50%;
+}
+.sprite__hat {
+  position: absolute;
+  z-index: 4;
+  left: 17%;
+  top: 13%;
+  width: 66%;
+  height: 32%;
+  border: 2px solid var(--coat-dark);
+  border-radius: 54% 54% 26% 26%;
+  background: linear-gradient(140deg, #fff6d3 0 9%, var(--hat) 18% 70%, var(--coat-dark));
+  box-shadow: inset 0 3px 0 rgb(255 255 255 / 38%), 0 2px 0 #7d4c33;
+}
+.sprite__hat::before {
+  content: '';
+  position: absolute;
+  left: 41%;
+  top: -32%;
+  width: 20%;
+  height: 34%;
+  border: 2px solid var(--coat-dark);
+  border-radius: 50% 50% 20% 20%;
+  background: var(--hat);
+}
+.sprite__hat::after {
+  content: '';
+  position: absolute;
+  left: 38%;
+  top: 43%;
+  width: 25%;
+  height: 30%;
+  border: 1px solid rgb(89 47 28 / 35%);
+  border-radius: 50%;
+  background: #ffe4a0;
+}
+.sprite.dir-up .sprite__face { opacity: .35; }
+.sprite.dir-left .sprite__face { transform: translateX(-7%); }
+.sprite.dir-right .sprite__face { transform: translateX(7%); }
+.sprite--me { outline: none; }
+.sprite--me .sprite__shadow { outline: 2px solid #fff5ca; outline-offset: 1px; }
+.sprite--dead { opacity: .3; filter: grayscale(1); }
+@media (prefers-reduced-motion: reduce) {
+  .cell.t3::before { animation: none; }
+}

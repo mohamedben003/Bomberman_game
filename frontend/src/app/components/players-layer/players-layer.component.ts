@@ -18,7 +18,13 @@ import type { RenderPlayer } from '../../core/game-view.service';
         [style.transform]="transform(player)"
         [attr.data-slot]="player.slot"
         [attr.aria-label]="'player ' + player.slot"
-      ></div>
+      >
+        <span class="sprite__shadow"></span>
+        <span class="sprite__boots"></span>
+        <span class="sprite__body"></span>
+        <span class="sprite__face"></span>
+        <span class="sprite__hat"></span>
+      </div>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
