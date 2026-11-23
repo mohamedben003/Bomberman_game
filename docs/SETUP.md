@@ -7,7 +7,7 @@ machine with the prerequisites below.
 
 | Tool | Version | Check |
 |---|---|---|
-| JDK | 21 (Temurin/OpenJDK) | `java -version` |
+| JDK | 25 (Temurin/OpenJDK; Spring Boot 4.2 supports 17–27) | `java -version` |
 | Maven | 3.9+ or the included `./mvnw` | `./mvnw -v` |
 | Node.js | 20 LTS or newer | `node -v` |
 | npm | 10+ | `npm -v` |

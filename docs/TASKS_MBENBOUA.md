@@ -16,8 +16,8 @@ pull request while the contract is still a draft (before M1).
 
 ## Boundaries
 
-- Backend only: Java 21, Spring Boot 3, Spring Web, Spring WebSocket, Spring Data JPA, Bean Validation,
-  Flyway, PostgreSQL, JUnit 5, Testcontainers.
+- Backend only: Java 25, Spring Boot 4.2, Spring WebMVC, Spring WebSocket, Spring Data JPA, Bean Validation,
+  Flyway, PostgreSQL, JUnit 6, Testcontainers.
 - `game/` is plain Java. It must not import Spring, JPA, WebSocket, HTTP or the room package. The room
   calls the engine; the engine never sends messages.
 - Never trust a client-supplied player id, room id, position, life count, power-up or result. Derive the
@@ -94,7 +94,7 @@ Angular depends on the wire contract, not on these names.
 
 Deliver:
 
-1. Maven project with the Spring Boot parent, Java 21, wrapper, dependencies and test setup.
+1. Maven project with the Spring Boot 4.2 parent, Java 25, wrapper, dependencies and test setup.
 2. `POST /api/sessions` with validation, `PlayerEntity` persistence and an in-memory `GuestSession`.
 3. Native WebSocket endpoint `/ws`; `JOIN {sessionId}`; a minimal `RoomManager` that places the player in
    one room and returns `ROOM_STATE`; basic `CHAT` broadcast; `ERROR` envelope.

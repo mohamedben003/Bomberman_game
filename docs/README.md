@@ -22,7 +22,7 @@ Update the documents and their consumers in the same pull request.
 
 | Layer | Technology | Notes |
 |---|---|---|
-| Backend | Java 21 + Spring Boot 3 | REST, raw WebSocket handler, authoritative game loop, in-memory rooms |
+| Backend | Java 25 + Spring Boot 4.2 | REST, raw WebSocket handler, authoritative game loop, in-memory rooms |
 | Frontend | Angular (current stable) + TypeScript | Standalone components, routing, reactive forms, signals, services |
 | Database | PostgreSQL 16+ | Players, completed matches and participations; Flyway migrations |
 | Real time | Native WebSocket, JSON envelope `{type,data}` | No STOMP/SockJS, no polling for live state |
